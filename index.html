@@ -86,6 +86,24 @@
     <div class="blob blob-3" data-strength="6"></div>
   </div>
 
+  <div id="bubble-menu" class="fixed top-6 left-6 z-40">
+    <div id="bubble-handle" class="cursor-grab rounded-full shadow-lg bg-white/80 dark:bg-[#2c2044]/80 border border-primary/20 backdrop-blur px-3 py-3 flex items-center gap-2">
+      <button id="bubble-toggle" aria-label="Abrir menú" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-md active:scale-[0.98]">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <div id="bubble-panel" class="hidden items-center gap-2">
+        <button id="bubble-theme" class="rounded-full px-3 py-2 bg-white/70 dark:bg-[#1f142b] border border-primary/20 text-sm flex items-center gap-1">
+          <span class="material-symbols-outlined" style="font-size:18px;">dark_mode</span>
+          Tema
+        </button>
+        <button id="bubble-shutter" class="rounded-full px-3 py-2 bg-primary text-white text-sm shadow-md active:scale-[0.98]">
+          <span class="material-symbols-outlined" style="font-size:18px;">photo_camera</span>
+          Sonido
+        </button>
+      </div>
+    </div>
+  </div>
+
   <main class="relative z-10">
     <section id="about" class="w-full bg-background-light dark:bg-background-dark py-20 sm:py-24">
       <div class="container mx-auto max-w-4xl px-4">
@@ -240,7 +258,7 @@
     </section>
   </main>
 
-  <footer class="relative z-10 flex flex-col items-center gap-6 px-5 py-10 text-center border-t border-primary/20">
+  <footer class="relative z-10 flex flex-col items-center gap-6 px-5 py-10 text-center border-t border-primary/20 bg-background-light dark:bg-background-dark">
     <div class="flex flex-wrap justify-center gap-5">
       <a href="#" aria-label="Youtube" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors transition-transform hover:scale-110"><span class="material-symbols-outlined" style="font-size:28px;">smart_display</span></a>
       <a href="#" aria-label="Behance" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors transition-transform hover:scale-110"><span class="material-symbols-outlined" style="font-size:28px;">palette</span></a>
@@ -250,145 +268,6 @@
     <p class="text-gray-500 dark:text-gray-400 text-sm">©Cobrechan 2025. Todos los derechos reservados.</p>
   </footer>
 
-  <script>
-    const preloader = document.getElementById('preloader')
-    const flash = document.getElementById('flash')
-    const audio = document.getElementById('shutter-audio')
-    const cameraUi = document.getElementById('camera-ui')
-    const aperture = document.getElementById('aperture')
-    const shutterBtn = document.querySelector('.shutter-btn')
-    const lensGloss = document.getElementById('lens-gloss')
-    const contactForm = document.querySelector('#contact form')
-    const contactStatus = document.getElementById('contact-status')
-    const contactSubmit = document.getElementById('contact-submit')
-    const bgBlobs = document.querySelectorAll('#page-bg .blob')
-    if (contactForm) {
-      contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault()
-        const formData = new FormData(contactForm)
-        if (contactStatus) {
-          contactStatus.textContent = 'Enviando…'
-          contactStatus.classList.remove('hidden')
-          contactStatus.classList.remove('text-green-600', 'dark:text-green-400', 'text-red-600', 'dark:text-red-400')
-          contactStatus.classList.add('text-primary')
-        }
-        if (contactSubmit) {
-          contactSubmit.disabled = true
-          contactSubmit.classList.add('opacity-50', 'cursor-not-allowed')
-        }
-        try {
-          const res = await fetch(contactForm.action, {
-            method: 'POST',
-            headers: { Accept: 'application/json' },
-            body: formData,
-          })
-          if (res.ok) {
-            if (contactStatus) {
-              contactStatus.textContent = 'Enviado'
-              contactStatus.classList.remove('text-primary')
-              contactStatus.classList.add('text-green-600', 'dark:text-green-400')
-            }
-            contactForm.reset()
-            setTimeout(() => { if (contactStatus) contactStatus.classList.add('hidden') }, 4000)
-          } else {
-            if (contactStatus) {
-              contactStatus.textContent = 'Error al enviar'
-              contactStatus.classList.remove('text-primary')
-              contactStatus.classList.add('text-red-600', 'dark:text-red-400')
-            }
-          }
-        } catch (err) {
-          if (contactStatus) {
-            contactStatus.textContent = 'Error al enviar'
-            contactStatus.classList.remove('text-primary')
-            contactStatus.classList.add('text-red-600', 'dark:text-red-400')
-          }
-        } finally {
-          if (contactSubmit) {
-            contactSubmit.disabled = false
-            contactSubmit.classList.remove('opacity-50', 'cursor-not-allowed')
-          }
-        }
-      })
-    }
-
-
-
-    function playShutter() {
-      if (!audio) return
-      audio.currentTime = 0
-      audio.play().catch(() => {})
-    }
-
-    function tiltCamera(e) {
-      if (!cameraUi || !preloader) return
-      const r = preloader.getBoundingClientRect()
-      const nx = (e.clientX - r.left) / r.width * 2 - 1
-      const ny = (e.clientY - r.top) / r.height * 2 - 1
-      const ry = nx * 18
-      const rx = -ny * 12
-      cameraUi.style.transform = `rotateY(${ry}deg) rotateX(${rx}deg)`
-      if (lensGloss) {
-        const tx = nx * 14
-        const ty = ny * 10
-        lensGloss.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(12deg)`
-      }
-    }
-    preloader.addEventListener('mousemove', tiltCamera)
-    preloader.addEventListener('mouseleave', () => { if (cameraUi) cameraUi.style.transform = 'rotateY(0deg) rotateX(0deg)' })
-
-    preloader.addEventListener('click', () => {
-      if (aperture) {
-        aperture.classList.remove('active')
-        void aperture.offsetWidth
-        aperture.classList.add('active')
-      }
-      playShutter()
-      flash.classList.add('opacity-100')
-      setTimeout(() => {
-        flash.classList.remove('opacity-100')
-        preloader.classList.add('opacity-0', 'transition-opacity')
-        setTimeout(() => {
-          preloader.classList.add('hidden')
-          document.body.classList.remove('overflow-hidden')
-          const el = document.getElementById('about')
-          if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth' })
-        }, 300)
-      }, 150)
-    })
-
-    if (shutterBtn) {
-      shutterBtn.addEventListener('click', (e) => {
-        e.stopPropagation()
-        preloader.click()
-      })
-    }
-
-
-    const revealEls = document.querySelectorAll('.reveal')
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const t = entry.target
-          const d = t.dataset && t.dataset.delay
-          if (d) t.style.transitionDelay = d
-          t.classList.add('in-view')
-          io.unobserve(t)
-        }
-      })
-    }, { threshold: 0.2 })
-    revealEls.forEach((el) => io.observe(el))
-
-    window.addEventListener('mousemove', (e) => {
-      const nx = (e.clientX / window.innerWidth) - 0.5
-      const ny = (e.clientY / window.innerHeight) - 0.5
-      bgBlobs.forEach((b) => {
-        const s = Number(b.dataset.strength || 8)
-        b.style.setProperty('--ox', `${nx * s * 10}px`)
-        b.style.setProperty('--oy', `${ny * s * 8}px`)
-      })
-    })
-  </script>
   <script src="assets/main.js"></script>
 </body>
 </html>
