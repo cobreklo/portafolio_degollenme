@@ -29,12 +29,38 @@
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
     .reviews-stars .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
     html { scroll-behavior: smooth }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: translateY(0) } }
+    .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; will-change: opacity, transform }
+    .reveal.in-view { opacity: 1; transform: translateY(0) }
+    .hover-glow:hover { box-shadow: 0 12px 36px rgba(140, 43, 238, .35) }
+    @keyframes recordBlink { 0%, 60% { opacity: 1 } 30% { opacity: .45 } }
+    .tilt-transition { transition: transform .12s ease; will-change: transform; transform-style: preserve-3d }
+    .tilt-space { perspective: 900px }
+    .record-led { animation: recordBlink 1.6s infinite }
+    .aperture { opacity: 0; pointer-events: none }
+    .aperture.active { animation: apertureBurst .18s ease-in-out }
+    @keyframes apertureBurst { 0% { opacity: 0; transform: scale(.95) } 40% { opacity: .9; transform: scale(1) } 100% { opacity: 0; transform: scale(1.05) } }
+    .aperture .blade { position: absolute; left: 50%; top: 50%; width: 60%; height: 8px; background: #1a1524; border-radius: 9999px; transform-origin: center; }
+    .shutter-btn { background: linear-gradient(180deg, #d9d9d9 0%, #a6a6a6 60%, #7c7c7c 100%); box-shadow: inset 0 2px 6px rgba(255,255,255,.35), inset 0 -2px 8px rgba(0,0,0,.35), 0 6px 18px rgba(0,0,0,.35); }
+    .shutter-btn:hover { transform: scale(1.06) }
+    .camera-badge { position: relative; padding: 3px 12px; border-radius: 9999px; border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.92); background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.35)); box-shadow: inset 0 2px 4px rgba(255,255,255,.35), inset 0 -2px 6px rgba(0,0,0,.45), 0 6px 18px rgba(0,0,0,.4); font-size: 12px; letter-spacing: .35em; font-weight: 700; text-shadow: 0 1px 0 rgba(0,0,0,.35) }
+    .camera-badge::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; box-shadow: 0 0 0 1px rgba(255,255,255,.12), inset 0 0 10px rgba(255,255,255,.06) }
+    .camera-badge::after { content: ""; position: absolute; left: 8px; right: 8px; top: 2px; height: 12px; border-radius: 9999px; background: linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0)); opacity: .35; pointer-events: none }
+    .camera-body { background: linear-gradient(180deg, #1a1524 0%, #0f0b17 100%); box-shadow: inset 0 8px 18px rgba(255,255,255,.04), inset 0 -8px 22px rgba(0,0,0,.35), 0 40px 90px rgba(10, 6, 20, .6) }
+    .stage-vignette { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse at center, rgba(255,255,255,.06) 0%, rgba(0,0,0,.65) 60%, rgba(0,0,0,.88) 100%) }
+    .lens-gloss { position:absolute; left:50%; top:50%; width:64px; height:36px; border-radius:9999px; background: rgba(255,255,255,.22); filter: blur(3px); opacity:.75; transform: translate(-50%, -50%) rotate(12deg) }
+    @keyframes gradientShift { 0% { background-position: 0% 50% } 100% { background-position: 100% 50% } }
+    .page-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(120deg, #FCFAFF, #E6E0F8, #FCFAFF); background-size: 200% 200%; animation: gradientShift 18s ease-in-out infinite alternate }
+    .text-gradient { color: #6f2bdc }
+    @supports (-webkit-background-clip:text) or (background-clip:text) {
+      .text-gradient { background-image: linear-gradient(90deg, #6f2bdc, #9e62ff, #6f2bdc); -webkit-background-clip: text; background-clip: text; color: transparent }
+    }
   </style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='20' font-size='20'>🎥</text></svg>">
   <meta name="theme-color" content="#8c2bee" />
 </head>
 <body class="font-display bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200 overflow-hidden">
-  <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-[#FCFAFF] dark:bg-[#191022] bg-gradient-to-b from-[#E6E0F8] to-[#FCFAFF] dark:from-[#2c2044] dark:to-[#191022] overflow-hidden cursor-pointer">
+  <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0b0911] bg-gradient-to-b from-[#0b0911] to-[#07060c] overflow-hidden cursor-pointer">
     <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
       <div class="relative h-[90vh] w-[90vw] max-h-[800px] max-w-[1200px]">
         <div class="absolute left-8 top-8 h-8 w-8 border-l-2 border-t-2 border-white/50 dark:border-white/20"></div>
@@ -47,41 +73,58 @@
           <div class="absolute bottom-0 left-0 h-4 w-4 border-b-2 border-l-2 border-white/70 dark:border-white/40"></div>
           <div class="absolute bottom-0 right-0 h-4 w-4 border-b-2 border-r-2 border-white/70 dark:border-white/40"></div>
         </div>
-        <span class="absolute right-8 top-1/2 -translate-y-1/2 -rotate-90 text-xs font-light text-white/50 dark:text-white/20">1/125 F4.0 ISO 100</span>
+        <!--Sección pulenta del easter egg iso cámara :p-->
+        <span class="absolute right-8 top-1/2 -translate-y-1/2 -rotate-90 text-xs font-light text-white/50 dark:text-white/20">A:Mi Go:Ugo F4.0 ISO 100</span>
       </div>
     </div>
-    <div class="relative z-10 flex flex-col items-center gap-6 select-none">
-      <div id="camera-ui" class="relative cursor-pointer rounded-[24px] bg-[#141019] dark:bg-[#1b1426] shadow-2xl w-[320px] h-[220px] sm:w-[420px] sm:h-[280px] md:w-[560px] md:h-[360px] border border-white/10">
+    <div class="stage-vignette"></div>
+    <div class="relative z-10 flex flex-col items-center gap-6 select-none tilt-space">
+      <div id="camera-ui" class="relative cursor-pointer rounded-[24px] camera-body shadow-2xl w-[320px] h-[220px] sm:w-[420px] sm:h-[280px] md:w-[560px] md:h-[360px] border border-white/10 tilt-transition">
         <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-32 h-12 rounded-t-[24px] bg-[#0f0b14] border-b border-white/10"></div>
-        <div class="absolute left-6 top-6 h-5 w-20 rounded-full bg-[#0d0a13] border border-white/10"></div>
+        
+        <div class="absolute left-6 top-8 camera-badge">07</div>
         <div class="absolute right-6 top-6 h-6 w-10 rounded bg-[#0d0a13] border border-white/10"></div>
+        <div class="absolute right-6 top-14 h-10 w-10 rounded-full border border-white/20 shutter-btn"></div>
         <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[140px] w-[140px] sm:h-[180px] sm:w-[180px] md:h-[240px] md:w-[240px] rounded-full bg-gradient-to-b from-[#1c1a24] to-[#0c0912] border-[12px] border-[#2c2640] shadow-inner">
           <div class="absolute inset-3 rounded-full border-4 border-[#3a3357]"></div>
           <div class="absolute inset-8 rounded-full bg-gradient-to-tr from-[#2a2444] via-[#362b59] to-[#0f0b1a] opacity-80"></div>
           <div class="absolute left-6 top-8 h-6 w-12 rounded-full bg-white/20 blur-[2px] rotate-12"></div>
+          <div class="absolute inset-12 rounded-full border-2 border-[#4c3b7a]/40"></div>
+          <div id="lens-gloss" class="lens-gloss"></div>
+          <div id="aperture" class="absolute inset-0 flex items-center justify-center">
+            <div class="blade" style="transform: translate(-50%, -50%) rotate(0deg)"></div>
+            <div class="blade" style="transform: translate(-50%, -50%) rotate(60deg)"></div>
+            <div class="blade" style="transform: translate(-50%, -50%) rotate(120deg)"></div>
+            <div class="blade" style="transform: translate(-50%, -50%) rotate(180deg)"></div>
+            <div class="blade" style="transform: translate(-50%, -50%) rotate(240deg)"></div>
+            <div class="blade" style="transform: translate(-50%, -50%) rotate(300deg)"></div>
+          </div>
         </div>
-        <div class="absolute right-6 bottom-6 h-3 w-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.7)]"></div>
+        <div class="absolute right-6 bottom-6 h-3 w-3 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.7)] record-led"></div>
       </div>
-      <p class="text-[#734c9a] dark:text-[#c3b1e1] text-base">Haz clic para entrar</p>
+      <p class="text-[#734c9a] dark:text-[#c3b1e1] text-base animate-pulse">Haz clic para entrar</p>
     </div>
   </div>
 
   <div id="flash" class="fixed inset-0 z-[60] bg-white opacity-0 pointer-events-none transition-opacity duration-200"></div>
   <audio id="shutter-audio" preload="auto" src="assets/efectocamara.mp3"></audio>
 
+  <div id="page-bg" class="page-bg"></div>
+
   <main>
     <section id="about" class="w-full bg-background-light dark:bg-background-dark py-20 sm:py-24">
       <div class="container mx-auto max-w-4xl px-4">
         <div class="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16">
-          <div class="w-48 h-48 md:w-56 md:h-56 flex-shrink-0">
+          <div class="w-48 h-48 md:w-56 md:h-56 flex-shrink-0 reveal relative" data-delay="0ms">
+            <div class="absolute inset-0 -z-10 rounded-full bg-gradient-to-tr from-primary/25 to-transparent blur-2xl"></div>
             <img src="img/acercadeugo.jpg" alt="Foto de perfil" class="w-full h-full rounded-full object-cover shadow-lg border-4 border-white dark:border-[#2c2044]" />
           </div>
-          <div class="text-center md:text-left">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Acerca de Mí</h2>
+          <div class="text-center md:text-left reveal" data-delay="100ms">
+            <h2 class="text-3xl font-bold text-gradient mb-4">Acerca de Mí</h2>
             <p class="text-[#4c3561] dark:text-[#c3b1e1] leading-relaxed mb-6">Hola, soy un creador audiovisual con enfoque en estética minimalista y narrativa visual. Busco capturar la esencia de cada momento y transformar lo ordinario en extraordinario.</p>
             <div class="flex items-center justify-center md:justify-start gap-4">
-              <a href="#photos" class="inline-block bg-primary text-white font-medium py-3 px-6 rounded-lg shadow-md hover:bg-opacity-90 transition-colors">Ver Fotos</a>
-              <a href="#contact" class="inline-block border border-primary text-primary font-medium py-3 px-6 rounded-lg hover:bg-primary/10 transition-colors">Contáctame</a>
+              <a href="#photos" class="inline-block bg-primary text-white font-medium py-3 px-6 rounded-lg shadow-md hover:bg-opacity-90 transition-colors transition-transform hover:scale-[1.02] active:scale-[0.98] hover-glow">Ver Fotos</a>
+              <a href="#contact" class="inline-block border border-primary text-primary font-medium py-3 px-6 rounded-lg hover:bg-primary/10 transition-colors transition-transform hover:scale-[1.02] active:scale-[0.98]">Contáctame</a>
             </div>
           </div>
         </div>
@@ -91,52 +134,52 @@
     <section id="photos" class="w-full py-20 sm:py-24 bg-gradient-to-b from-[#FCFAFF] to-[#E6E0F8] dark:from-[#191022] dark:to-[#2c2044]">
       <div class="container mx-auto max-w-6xl px-4">
         <div class="text-center mb-10">
-          <h2 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">Mis Fotos</h2>
+          <h2 class="text-4xl font-bold tracking-tight text-gradient sm:text-5xl">Mis Fotos</h2>
           <p class="mt-3 text-lg text-[#734c9a] dark:text-[#c3b1e1]">Selección de proyectos y sesiones favoritas.</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105">
-            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZYV1n_syrmcCo8UKW1_0D_OxzVYc0gfN3CHOqBVza6IFRKF9tc_J2-yXrxDB8g5_6j7Y8nHiEKUZVxhmvijssOtgVIasfqxYcgf2mWqtqrMF8L1joSRXUvhwpM_BGMFneh2-xXAJT-6NHPQ4ixB-YhOGWCAAW_Qk2IGrgCeBNxGd5RdtI-x2amnoTtzSlqDkJnG6DxcMkzNL89wdtKlfIH1U7GAhqA62NgGljHnBPFdB1A2vNygiGK3v54CRzLctGLQO0ws6HTg');">
+          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105 reveal" data-delay="0ms">
+            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg ring-0 group-hover:ring-2 ring-primary transition" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZYV1n_syrmcCo8UKW1_0D_OxzVYc0gfN3CHOqBVza6IFRKF9tc_J2-yXrxDB8g5_6j7Y8nHiEKUZVxhmvijssOtgVIasfqxYcgf2mWqtqrMF8L1joSRXUvhwpM_BGMFneh2-xXAJT-6NHPQ4ixB-YhOGWCAAW_Qk2IGrgCeBNxGd5RdtI-x2amnoTtzSlqDkJnG6DxcMkzNL89wdtKlfIH1U7GAhqA62NgGljHnBPFdB1A2vNygiGK3v54CRzLctGLQO0ws6HTg');">
               <div class="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity p-4">
                 <p class="text-white text-lg font-bold text-center">Proyecto Videoclip</p>
                 <p class="text-gray-300 text-sm">Música</p>
               </div>
             </div>
           </div>
-          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105">
-            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAnK1cmFkH35BBiZEzu-eLPZJBQncfP6GzoVW6cY2utEOvyZDJy2E-CptPJoWlWY6Y1O-7nORLeqFh466tFGBMXB1pp0MJS7pl8ZbBZ3wLOSZqLH3U88rZYKfgqL25gKM3iXPorWpW0TKq5BfxNYiQ2pQF5zVrAA6nq51ruIU538CuAPw16RR0TJNiZM67vnLQoWrL13OYx7ycJMvXZEwquH8ptVQG1g9sNfTE2SeXxmchpAptUnmGha6T6F5Vo3G2kIG7ueycyeg');">
+          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105 reveal" data-delay="100ms">
+            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg ring-0 group-hover:ring-2 ring-primary transition" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAnK1cmFkH35BBiZEzu-eLPZJBQncfP6GzoVW6cY2utEOvyZDJy2E-CptPJoWlWY6Y1O-7nORLeqFh466tFGBMXB1pp0MJS7pl8ZbBZ3wLOSZqLH3U88rZYKfgqL25gKM3iXPorWpW0TKq5BfxNYiQ2pQF5zVrAA6nq51ruIU538CuAPw16RR0TJNiZM67vnLQoWrL13OYx7ycJMvXZEwquH8ptVQG1g9sNfTE2SeXxmchpAptUnmGha6T6F5Vo3G2kIG7ueycyeg');">
               <div class="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity p-4">
                 <p class="text-white text-lg font-bold text-center">Animación 3D</p>
                 <p class="text-gray-300 text-sm">Visual FX</p>
               </div>
             </div>
           </div>
-          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105">
-            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAhwu-D_qW2Qix_-dTzTLMM0n9KB1tUllsoOBNDJT7FA9AXvejQ9iT2XHqDDFIWSfHG_Q1z76GHZ66xRAphQGYq_Z9u3YqY93xfN5LIcKpcvhyb7Fsw_V_sC0-FAv-USZFEeiC89Yp0RW_0kC1F4PCQSMCI15-af9HLtOc2qcHYVDNPOn3YK-EVYnSCNip40sd3r91ZGD9EcOv56jy_pPHqPVlbV89053U4rBFIA-CpG1GDRKjGm3ePQHjUkn-fxpmsFaTFjme0rQ');">
+          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105 reveal" data-delay="200ms">
+            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg ring-0 group-hover:ring-2 ring-primary transition" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAhwu-D_qW2Qix_-dTzTLMM0n9KB1tUllsoOBNDJT7FA9AXvejQ9iT2XHqDDFIWSfHG_Q1z76GHZ66xRAphQGYq_Z9u3YqY93xfN5LIcKpcvhyb7Fsw_V_sC0-FAv-USZFEeiC89Yp0RW_0kC1F4PCQSMCI15-af9HLtOc2qcHYVDNPOn3YK-EVYnSCNip40sd3r91ZGD9EcOv56jy_pPHqPVlbV89053U4rBFIA-CpG1GDRKjGm3ePQHjUkn-fxpmsFaTFjme0rQ');">
               <div class="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity p-4">
                 <p class="text-white text-lg font-bold text-center">Retrato</p>
                 <p class="text-gray-300 text-sm">Fotografía</p>
               </div>
             </div>
           </div>
-          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105">
-            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDqsdrBhtHTx0315p7QRTJ8ghb-OyUvigCwD91aax-i3ElQWXX8jY9l97aJujqs4Bmcpv6OWA5HXsDWJKykv_ZDNCYH4Qgp5BgF9aLc6l0MqkMLHywtjdrUZeZTkg7-gWetMG9OhsLxyXEqYZK-u9_IKqG_W8oliwyX-g8SGE0UlnfEcFh-Z3HRVlStw-XU5QUo9_9UWYsZmnkXWp-kALQJJBcdfmvqUAafve-m5KKNlpLg1ZYam3RigtwFVyb9sZkM-hdEhw9j9A');">
+          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105 reveal" data-delay="0ms">
+            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg ring-0 group-hover:ring-2 ring-primary transition" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuDqsdrBhtHTx0315p7QRTJ8ghb-OyUvigCwD91aax-i3ElQWXX8jY9l97aJujqs4Bmcpv6OWA5HXsDWJKykv_ZDNCYH4Qgp5BgF9aLc6l0MqkMLHywtjdrUZeZTkg7-gWetMG9OhsLxyXEqYZK-u9_IKqG_W8oliwyX-g8SGE0UlnfEcFh-Z3HRVlStw-XU5QUo9_9UWYsZmnkXWp-kALQJJBcdfmvqUAafve-m5KKNlpLg1ZYam3RigtwFVyb9sZkM-hdEhw9j9A');">
               <div class="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity p-4">
                 <p class="text-white text-lg font-bold text-center">Cortometraje</p>
                 <p class="text-gray-300 text-sm">Cine</p>
               </div>
             </div>
           </div>
-          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105">
-            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuC_X0NrDNWggD4BtNIlZwewdO4BfSCAvL44zHqcM7MJkF7bxNMQRiO3xQQeqjZ6Fzx8lMIGpeXfEhftq3QIK0f8O6FInXf_qSfQEu3AwXYZ9B2WfqeXoquKabZHzhjmEXgRmH_pwLGAues5MUoKUc31-uZgwnhiZPKSzlf9D0wgYUwmYoTka9q56oHpOJVDQ1y9upQXH-K-8Kr7W_m9enVwNh1fmw_U3T7I6HGTcgCC4MBAcCWU05IXDLxSKbGRs9fiXUMoBk-9sQ');">
+          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105 reveal" data-delay="100ms">
+            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg ring-0 group-hover:ring-2 ring-primary transition" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuC_X0NrDNWggD4BtNIlZwewdO4BfSCAvL44zHqcM7MJkF7bxNMQRiO3xQQeqjZ6Fzx8lMIGpeXfEhftq3QIK0f8O6FInXf_qSfQEu3AwXYZ9B2WfqeXoquKabZHzhjmEXgRmH_pwLGAues5MUoKUc31-uZgwnhiZPKSzlf9D0wgYUwmYoTka9q56oHpOJVDQ1y9upQXH-K-8Kr7W_m9enVwNh1fmw_U3T7I6HGTcgCC4MBAcCWU05IXDLxSKbGRs9fiXUMoBk-9sQ');">
               <div class="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity p-4">
                 <p class="text-white text-lg font-bold text-center">Motion Graphics</p>
                 <p class="text-gray-300 text-sm">Animación</p>
               </div>
             </div>
           </div>
-          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105">
-            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAGdQ_e-wa3ovAx4k8nHtuLdqWe1CA0LIYHL6LCjpOfEEkqNtYM3Z0I0fX2Y966UWMFxCThBQTemjZ9C5CR3Ws0d8rAiF-XT7dePz-3tVD-cEV4Z6EoCxnHcS8-KVzrHqb7Si-v_3N89bsLRESOoiQ4W3iOk3ti78tQdgHJ3DTo_6LKiOBkXIf5i2rWoYoimt_oTr9zU6FWlv-7XYjV7sp1VCAKrxFvdVpeQZJgx9d1m7hJ8-lsa7l2RPELAKYhiYcwE8l541EFLg');">
+          <div class="group relative aspect-square rounded-xl p-4 transition-transform duration-300 hover:scale-105 reveal" data-delay="200ms">
+            <div class="bg-cover bg-center aspect-square rounded-full h-full w-full shadow-lg ring-0 group-hover:ring-2 ring-primary transition" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAGdQ_e-wa3ovAx4k8nHtuLdqWe1CA0LIYHL6LCjpOfEEkqNtYM3Z0I0fX2Y966UWMFxCThBQTemjZ9C5CR3Ws0d8rAiF-XT7dePz-3tVD-cEV4Z6EoCxnHcS8-KVzrHqb7Si-v_3N89bsLRESOoiQ4W3iOk3ti78tQdgHJ3DTo_6LKiOBkXIf5i2rWoYoimt_oTr9zU6FWlv-7XYjV7sp1VCAKrxFvdVpeQZJgx9d1m7hJ8-lsa7l2RPELAKYhiYcwE8l541EFLg');">
               <div class="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity p-4">
                 <p class="text-white text-lg font-bold text-center">Documental</p>
                 <p class="text-gray-300 text-sm">No Ficción</p>
@@ -149,8 +192,8 @@
 
     <section id="contact" class="w-full bg-background-light dark:bg-background-dark py-20 sm:py-24">
       <div class="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col items-center text-center mb-12">
-          <h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">Hablemos</h2>
+        <div class="flex flex-col items-center text-center mb-12 reveal" data-delay="0ms">
+          <h2 class="text-3xl font-bold tracking-tight text-gradient sm:text-4xl">Hablemos</h2>
           <p class="mt-4 max-w-2xl text-lg text-[#734c9a] dark:text-[#c3b1e1]">¿Tienes un proyecto en mente? Contáctame o solicita una cotización.</p>
         </div>
         <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
@@ -163,7 +206,7 @@
               <li class="flex items-start"><span class="material-symbols-outlined mr-3 mt-1 h-6 w-6 shrink-0 text-primary">check_circle</span><span>Presupuesto aproximado</span></li>
             </ul>
           </div>
-          <div class="rounded-xl bg-white dark:bg-[#2c2044] dark:border dark:border-primary/20 p-8 shadow-md">
+          <div class="rounded-xl bg-white dark:bg-[#2c2044] dark:border dark:border-primary/20 p-8 shadow-md transition-shadow reveal" data-delay="150ms">
             <form action="https://formsubmit.co/ajax/dimondoxd@gmail.com" method="POST" class="space-y-6">
               <input type="hidden" name="_subject" value="Nuevo contacto - Portafolio" />
               <input type="hidden" name="_captcha" value="false" />
@@ -181,7 +224,7 @@
                 <label for="message" class="block text-sm font-medium text-[#734c9a] dark:text-[#c3b1e1]">Mensaje</label>
                 <textarea id="message" name="message" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 bg-white dark:bg-[#1f142b] dark:border-primary/30 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
               </div>
-              <button id="contact-submit" type="submit" class="w-full flex justify-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">Enviar Mensaje</button>
+              <button id="contact-submit" type="submit" class="w-full flex justify-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors transition-transform hover:scale-[1.02] active:scale-[0.98]">Enviar Mensaje</button>
               <p id="contact-status" aria-live="polite" class="mt-3 text-center text-green-600 dark:text-green-400 hidden">Enviado</p>
             </form>
           </div>
@@ -192,25 +235,25 @@
     <section id="reviews" class="w-full py-20 sm:py-24 bg-background-light dark:bg-background-dark">
       <div class="container mx-auto max-w-6xl px-4">
         <div class="text-center mb-10">
-          <h2 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">Reseñas</h2>
+          <h2 class="text-4xl font-bold tracking-tight text-gradient sm:text-5xl">Reseñas</h2>
           <p class="mt-3 text-lg text-[#734c9a] dark:text-[#c3b1e1]">Lo que dicen mis clientes</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="rounded-xl border border-primary/10 bg-white dark:bg-[#1f142b] p-6 shadow">
+          <div class="rounded-xl border border-primary/10 bg-white dark:bg-[#1f142b] p-6 shadow transition-transform hover:translate-y-1 hover:shadow-lg reveal" data-delay="0ms">
             <div class="flex items-center gap-1 text-primary reviews-stars">
               <span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span>
             </div>
             <p class="mt-3 text-gray-700 dark:text-gray-300">Excelente trabajo, dejaria que me fotografiara el hoyo en primer plano.</p>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">— Cobrechan</p>
           </div>
-          <div class="rounded-xl border border-primary/10 bg-white dark:bg-[#1f142b] p-6 shadow">
+          <div class="rounded-xl border border-primary/10 bg-white dark:bg-[#1f142b] p-6 shadow transition-transform hover:translate-y-1 hover:shadow-lg reveal" data-delay="100ms">
             <div class="flex items-center gap-1 text-primary reviews-stars">
               <span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span>
             </div>
             <p class="mt-3 text-gray-700 dark:text-gray-300">Profesional y creativo. lo recomiendo para capturar cabritas chicas</p>
             <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">— Tomás Cuevas</p>
           </div>
-          <div class="rounded-xl border border-primary/10 bg-white dark:bg-[#1f142b] p-6 shadow">
+          <div class="rounded-xl border border-primary/10 bg-white dark:bg-[#1f142b] p-6 shadow transition-transform hover:translate-y-1 hover:shadow-lg reveal" data-delay="200ms">
             <div class="flex items-center gap-1 text-primary reviews-stars">
               <span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span><span class="material-symbols-outlined">star</span>
             </div>
@@ -224,10 +267,10 @@
 
   <footer class="flex flex-col items-center gap-6 px-5 py-10 text-center border-t border-primary/20">
     <div class="flex flex-wrap justify-center gap-5">
-      <a href="#" aria-label="Youtube" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"><span class="material-symbols-outlined" style="font-size:28px;">smart_display</span></a>
-      <a href="#" aria-label="Behance" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"><span class="material-symbols-outlined" style="font-size:28px;">palette</span></a>
-      <a href="#" aria-label="Instagram" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"><span class="material-symbols-outlined" style="font-size:28px;">photo_camera</span></a>
-      <a href="#" aria-label="Linkedin" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"><span class="material-symbols-outlined" style="font-size:28px;">business_center</span></a>
+      <a href="#" aria-label="Youtube" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors transition-transform hover:scale-110"><span class="material-symbols-outlined" style="font-size:28px;">smart_display</span></a>
+      <a href="#" aria-label="Behance" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors transition-transform hover:scale-110"><span class="material-symbols-outlined" style="font-size:28px;">palette</span></a>
+      <a href="#" aria-label="Instagram" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors transition-transform hover:scale-110"><span class="material-symbols-outlined" style="font-size:28px;">photo_camera</span></a>
+      <a href="#" aria-label="Linkedin" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors transition-transform hover:scale-110"><span class="material-symbols-outlined" style="font-size:28px;">business_center</span></a>
     </div>
     <p class="text-gray-500 dark:text-gray-400 text-sm">©Cobrechan 2025. Todos los derechos reservados.</p>
   </footer>
@@ -237,6 +280,9 @@
     const flash = document.getElementById('flash')
     const audio = document.getElementById('shutter-audio')
     const cameraUi = document.getElementById('camera-ui')
+    const aperture = document.getElementById('aperture')
+    const shutterBtn = document.querySelector('.shutter-btn')
+    const lensGloss = document.getElementById('lens-gloss')
     const contactForm = document.querySelector('#contact form')
     const contactStatus = document.getElementById('contact-status')
     const contactSubmit = document.getElementById('contact-submit')
@@ -298,7 +344,29 @@
       audio.play().catch(() => {})
     }
 
+    function tiltCamera(e) {
+      if (!cameraUi || !preloader) return
+      const r = preloader.getBoundingClientRect()
+      const nx = (e.clientX - r.left) / r.width * 2 - 1
+      const ny = (e.clientY - r.top) / r.height * 2 - 1
+      const ry = nx * 18
+      const rx = -ny * 12
+      cameraUi.style.transform = `rotateY(${ry}deg) rotateX(${rx}deg)`
+      if (lensGloss) {
+        const tx = nx * 14
+        const ty = ny * 10
+        lensGloss.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(12deg)`
+      }
+    }
+    preloader.addEventListener('mousemove', tiltCamera)
+    preloader.addEventListener('mouseleave', () => { if (cameraUi) cameraUi.style.transform = 'rotateY(0deg) rotateX(0deg)' })
+
     preloader.addEventListener('click', () => {
+      if (aperture) {
+        aperture.classList.remove('active')
+        void aperture.offsetWidth
+        aperture.classList.add('active')
+      }
       playShutter()
       flash.classList.add('opacity-100')
       setTimeout(() => {
@@ -313,6 +381,27 @@
       }, 150)
     })
 
+    if (shutterBtn) {
+      shutterBtn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        preloader.click()
+      })
+    }
+
+
+    const revealEls = document.querySelectorAll('.reveal')
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const t = entry.target
+          const d = t.dataset && t.dataset.delay
+          if (d) t.style.transitionDelay = d
+          t.classList.add('in-view')
+          io.unobserve(t)
+        }
+      })
+    }, { threshold: 0.2 })
+    revealEls.forEach((el) => io.observe(el))
 
   </script>
 </body>
