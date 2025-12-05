@@ -163,11 +163,10 @@
             </ul>
           </div>
           <div class="rounded-xl bg-white dark:bg-[#2c2044] dark:border dark:border-primary/20 p-8 shadow-md">
-            <form action="https://formsubmit.co/dimondoxd@gmail.com" method="POST" class="space-y-6">
+            <form action="https://formsubmit.co/ajax/dimondoxd@gmail.com" method="POST" class="space-y-6">
               <input type="hidden" name="_subject" value="Nuevo contacto - Portafolio" />
               <input type="hidden" name="_captcha" value="false" />
               <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="_next" value="/?sent=1#contact" />
               <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" />
               <div>
                 <label for="name" class="block text-sm font-medium text-[#734c9a] dark:text-[#c3b1e1]">Nombre</label>
@@ -181,8 +180,8 @@
                 <label for="message" class="block text-sm font-medium text-[#734c9a] dark:text-[#c3b1e1]">Mensaje</label>
                 <textarea id="message" name="message" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 bg-white dark:bg-[#1f142b] dark:border-primary/30 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"></textarea>
               </div>
-              <button type="submit" class="w-full flex justify-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">Enviar Mensaje</button>
-              <p id="contact-status" class="mt-3 text-center text-green-600 dark:text-green-400 hidden">Enviado</p>
+              <button id="contact-submit" type="submit" class="w-full flex justify-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-primary hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">Enviar Mensaje</button>
+              <p id="contact-status" aria-live="polite" class="mt-3 text-center text-green-600 dark:text-green-400 hidden">Enviado</p>
             </form>
           </div>
         </div>
@@ -239,8 +238,56 @@
     const cameraUi = document.getElementById('camera-ui')
     const contactForm = document.querySelector('#contact form')
     const contactStatus = document.getElementById('contact-status')
-    const qs = new URLSearchParams(window.location.search)
-    if (qs.get('sent') === '1' && contactStatus) contactStatus.classList.remove('hidden')
+    const contactSubmit = document.getElementById('contact-submit')
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const formData = new FormData(contactForm)
+        if (contactStatus) {
+          contactStatus.textContent = 'Enviando…'
+          contactStatus.classList.remove('hidden')
+          contactStatus.classList.remove('text-green-600', 'dark:text-green-400')
+          contactStatus.classList.add('text-primary')
+        }
+        if (contactSubmit) {
+          contactSubmit.disabled = true
+          contactSubmit.classList.add('opacity-50', 'cursor-not-allowed')
+        }
+        try {
+          const res = await fetch(contactForm.action, {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: formData,
+          })
+          if (res.ok) {
+            if (contactStatus) {
+              contactStatus.textContent = 'Enviado'
+              contactStatus.classList.remove('text-primary')
+              contactStatus.classList.add('text-green-600', 'dark:text-green-400')
+            }
+            contactForm.reset()
+            setTimeout(() => { if (contactStatus) contactStatus.classList.add('hidden') }, 4000)
+          } else {
+            if (contactStatus) {
+              contactStatus.textContent = 'Error al enviar'
+              contactStatus.classList.remove('text-primary')
+              contactStatus.classList.add('text-red-600', 'dark:text-red-400')
+            }
+          }
+        } catch (err) {
+          if (contactStatus) {
+            contactStatus.textContent = 'Error al enviar'
+            contactStatus.classList.remove('text-primary')
+            contactStatus.classList.add('text-red-600', 'dark:text-red-400')
+          }
+        } finally {
+          if (contactSubmit) {
+            contactSubmit.disabled = false
+            contactSubmit.classList.remove('opacity-50', 'cursor-not-allowed')
+          }
+        }
+      })
+    }
 
 
 
