@@ -125,6 +125,43 @@ const io = new IntersectionObserver((entries) => {
 }, { threshold: 0.2 })
 revealEls.forEach((el) => io.observe(el))
 
+// BlurText inspirado en el prompt (sin dependencias)
+;(function initBlurText(){
+  const els = document.querySelectorAll('.blur-text')
+  els.forEach((el)=>{
+    const text = (el.textContent || '').trim()
+    const animateBy = (el.dataset && el.dataset.animateBy) || 'letters'
+    const direction = (el.dataset && el.dataset.direction) || 'top'
+    const delay = Number((el.dataset && el.dataset.delay) || 80)
+    const segments = animateBy === 'words' ? text.split(/\s+/) : text.split('')
+    el.textContent = ''
+    const spans = []
+    segments.forEach((seg, i)=>{
+      const span = document.createElement('span')
+      span.textContent = seg
+      span.style.display = 'inline-block'
+      span.style.filter = 'blur(10px)'
+      span.style.opacity = '0'
+      span.style.transform = `translateY(${direction === 'bottom' ? '20px' : '-20px'})`
+      span.style.transition = `all 500ms ease-out ${i*delay}ms`
+      el.appendChild(span)
+      spans.push(span)
+      if (animateBy === 'words' && i < segments.length - 1) el.appendChild(document.createTextNode(' '))
+    })
+    const obs = new IntersectionObserver(([entry])=>{
+      if (entry.isIntersecting){
+        spans.forEach((s)=>{
+          s.style.filter = 'blur(0px)'
+          s.style.opacity = '1'
+          s.style.transform = 'translateY(0)'
+        })
+        obs.unobserve(el)
+      }
+    }, { threshold: 0.1 })
+    obs.observe(el)
+  })
+})()
+
 window.addEventListener('mousemove', (e) => {
   const nx = (e.clientX / window.innerWidth) - 0.5
   const ny = (e.clientY / window.innerHeight) - 0.5
@@ -180,8 +217,9 @@ function playBubbleBounce(open) {
 const rootEl = document.documentElement
 try {
   const savedTheme = localStorage.getItem('theme')
-  if (savedTheme === 'dark') rootEl.classList.add('dark')
-} catch (e) {}
+  if (savedTheme === 'light') rootEl.classList.remove('dark')
+  else rootEl.classList.add('dark')
+} catch (e) { rootEl.classList.add('dark') }
 if (bubbleTheme) {
   const updateThemeIcon = () => {
     const icon = bubbleTheme.querySelector('.material-symbols-outlined')
@@ -285,3 +323,13 @@ if (bubble && bubbleHandle && bubbleToggle && bubblePanel) {
     })
   }
 }
+
+// Botón de explorar en hero
+;(function initHeroScroll(){
+  const btn = document.getElementById('hero-scroll')
+  if (!btn) return
+  btn.addEventListener('click', () => {
+    const next = document.getElementById('photos')
+    if (next && next.scrollIntoView) next.scrollIntoView({ behavior: 'smooth' })
+  })
+})()
