@@ -81,8 +81,8 @@ function tiltCamera(e) {
   }
 }
 
-preloader.addEventListener('mousemove', tiltCamera)
-preloader.addEventListener('mouseleave', () => { if (cameraUi) cameraUi.style.transform = 'rotateY(0deg) rotateX(0deg)' })
+preloader.addEventListener('pointermove', tiltCamera)
+preloader.addEventListener('pointerleave', () => { if (cameraUi) cameraUi.style.transform = 'rotateY(0deg) rotateX(0deg)' })
 
 preloader.addEventListener('click', () => {
   if (aperture) {
@@ -210,6 +210,7 @@ if (bubble && bubbleHandle && bubbleToggle && bubblePanel) {
   let lastT = 0
   function onDown(e) {
     if (e.target === bubbleToggle || (bubbleShutter && e.target === bubbleShutter) || (bubbleShutter && e.target.closest('#bubble-shutter'))) return
+    e.preventDefault()
     dragging = true
     bubble.classList.remove('cursor-grab')
     bubble.classList.add('cursor-grabbing')
@@ -227,6 +228,7 @@ if (bubble && bubbleHandle && bubbleToggle && bubblePanel) {
     bubbleHandle.style.transition = 'none'
     document.addEventListener('pointermove', onMove)
     document.addEventListener('pointerup', onUp)
+    document.addEventListener('pointercancel', onUp)
   }
   function onMove(e) {
     if (!dragging) return
