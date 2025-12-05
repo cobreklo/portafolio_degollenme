@@ -25,37 +25,7 @@
       },
     }
   </script>
-  <style>
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
-    .reviews-stars .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
-    html { scroll-behavior: smooth }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: translateY(0) } }
-    .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; will-change: opacity, transform }
-    .reveal.in-view { opacity: 1; transform: translateY(0) }
-    .hover-glow:hover { box-shadow: 0 12px 36px rgba(140, 43, 238, .35) }
-    @keyframes recordBlink { 0%, 60% { opacity: 1 } 30% { opacity: .45 } }
-    .tilt-transition { transition: transform .12s ease; will-change: transform; transform-style: preserve-3d }
-    .tilt-space { perspective: 900px }
-    .record-led { animation: recordBlink 1.6s infinite }
-    .aperture { opacity: 0; pointer-events: none }
-    .aperture.active { animation: apertureBurst .18s ease-in-out }
-    @keyframes apertureBurst { 0% { opacity: 0; transform: scale(.95) } 40% { opacity: .9; transform: scale(1) } 100% { opacity: 0; transform: scale(1.05) } }
-    .aperture .blade { position: absolute; left: 50%; top: 50%; width: 60%; height: 8px; background: #1a1524; border-radius: 9999px; transform-origin: center; }
-    .shutter-btn { background: linear-gradient(180deg, #d9d9d9 0%, #a6a6a6 60%, #7c7c7c 100%); box-shadow: inset 0 2px 6px rgba(255,255,255,.35), inset 0 -2px 8px rgba(0,0,0,.35), 0 6px 18px rgba(0,0,0,.35); }
-    .shutter-btn:hover { transform: scale(1.06) }
-    .camera-badge { position: relative; padding: 3px 12px; border-radius: 9999px; border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.92); background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.35)); box-shadow: inset 0 2px 4px rgba(255,255,255,.35), inset 0 -2px 6px rgba(0,0,0,.45), 0 6px 18px rgba(0,0,0,.4); font-size: 12px; letter-spacing: .35em; font-weight: 700; text-shadow: 0 1px 0 rgba(0,0,0,.35) }
-    .camera-badge::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; box-shadow: 0 0 0 1px rgba(255,255,255,.12), inset 0 0 10px rgba(255,255,255,.06) }
-    .camera-badge::after { content: ""; position: absolute; left: 8px; right: 8px; top: 2px; height: 12px; border-radius: 9999px; background: linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0)); opacity: .35; pointer-events: none }
-    .camera-body { background: linear-gradient(180deg, #1a1524 0%, #0f0b17 100%); box-shadow: inset 0 8px 18px rgba(255,255,255,.04), inset 0 -8px 22px rgba(0,0,0,.35), 0 40px 90px rgba(10, 6, 20, .6) }
-    .stage-vignette { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse at center, rgba(255,255,255,.06) 0%, rgba(0,0,0,.65) 60%, rgba(0,0,0,.88) 100%) }
-    .lens-gloss { position:absolute; left:50%; top:50%; width:64px; height:36px; border-radius:9999px; background: rgba(255,255,255,.22); filter: blur(3px); opacity:.75; transform: translate(-50%, -50%) rotate(12deg) }
-    @keyframes gradientShift { 0% { background-position: 0% 50% } 100% { background-position: 100% 50% } }
-    .page-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(120deg, #FCFAFF, #E6E0F8, #FCFAFF); background-size: 200% 200%; animation: gradientShift 18s ease-in-out infinite alternate }
-    .text-gradient { color: #6f2bdc }
-    @supports (-webkit-background-clip:text) or (background-clip:text) {
-      .text-gradient { background-image: linear-gradient(90deg, #6f2bdc, #9e62ff, #6f2bdc); -webkit-background-clip: text; background-clip: text; color: transparent }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/styles.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='20' font-size='20'>🎥</text></svg>">
   <meta name="theme-color" content="#8c2bee" />
 </head>
@@ -109,9 +79,14 @@
   <div id="flash" class="fixed inset-0 z-[60] bg-white opacity-0 pointer-events-none transition-opacity duration-200"></div>
   <audio id="shutter-audio" preload="auto" src="assets/efectocamara.mp3"></audio>
 
-  <div id="page-bg" class="page-bg"></div>
+  <div id="page-bg" class="page-bg">
+    <div class="bg-grid"></div>
+    <div class="blob blob-1" data-strength="8"></div>
+    <div class="blob blob-2" data-strength="12"></div>
+    <div class="blob blob-3" data-strength="6"></div>
+  </div>
 
-  <main>
+  <main class="relative z-10">
     <section id="about" class="w-full bg-background-light dark:bg-background-dark py-20 sm:py-24">
       <div class="container mx-auto max-w-4xl px-4">
         <div class="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16">
@@ -120,7 +95,7 @@
             <img src="img/acercadeugo.jpg" alt="Foto de perfil" class="w-full h-full rounded-full object-cover shadow-lg border-4 border-white dark:border-[#2c2044]" />
           </div>
           <div class="text-center md:text-left reveal" data-delay="100ms">
-            <h2 class="text-3xl font-bold text-gradient mb-4">Acerca de Mí</h2>
+            <h2 class="text-3xl font-bold text-[#6f2bdc] dark:text-[#c3b1e1] mb-4">Acerca de Mí</h2>
             <p class="text-[#4c3561] dark:text-[#c3b1e1] leading-relaxed mb-6">Hola, soy un creador audiovisual con enfoque en estética minimalista y narrativa visual. Busco capturar la esencia de cada momento y transformar lo ordinario en extraordinario.</p>
             <div class="flex items-center justify-center md:justify-start gap-4">
               <a href="#photos" class="inline-block bg-primary text-white font-medium py-3 px-6 rounded-lg shadow-md hover:bg-opacity-90 transition-colors transition-transform hover:scale-[1.02] active:scale-[0.98] hover-glow">Ver Fotos</a>
@@ -134,7 +109,7 @@
     <section id="photos" class="w-full py-20 sm:py-24 bg-gradient-to-b from-[#FCFAFF] to-[#E6E0F8] dark:from-[#191022] dark:to-[#2c2044]">
       <div class="container mx-auto max-w-6xl px-4">
         <div class="text-center mb-10">
-          <h2 class="text-4xl font-bold tracking-tight text-gradient sm:text-5xl">Mis Fotos</h2>
+          <h2 class="text-4xl font-bold tracking-tight text-[#6f2bdc] dark:text-[#c3b1e1] sm:text-5xl">Mis Fotos</h2>
           <p class="mt-3 text-lg text-[#734c9a] dark:text-[#c3b1e1]">Selección de proyectos y sesiones favoritas.</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -193,7 +168,7 @@
     <section id="contact" class="w-full bg-background-light dark:bg-background-dark py-20 sm:py-24">
       <div class="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col items-center text-center mb-12 reveal" data-delay="0ms">
-          <h2 class="text-3xl font-bold tracking-tight text-gradient sm:text-4xl">Hablemos</h2>
+          <h2 class="text-3xl font-bold tracking-tight text-[#6f2bdc] dark:text-[#c3b1e1] sm:text-4xl">Hablemos</h2>
           <p class="mt-4 max-w-2xl text-lg text-[#734c9a] dark:text-[#c3b1e1]">¿Tienes un proyecto en mente? Contáctame o solicita una cotización.</p>
         </div>
         <div class="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
@@ -235,7 +210,7 @@
     <section id="reviews" class="w-full py-20 sm:py-24 bg-background-light dark:bg-background-dark">
       <div class="container mx-auto max-w-6xl px-4">
         <div class="text-center mb-10">
-          <h2 class="text-4xl font-bold tracking-tight text-gradient sm:text-5xl">Reseñas</h2>
+          <h2 class="text-4xl font-bold tracking-tight text-[#6f2bdc] dark:text-[#c3b1e1] sm:text-5xl">Reseñas</h2>
           <p class="mt-3 text-lg text-[#734c9a] dark:text-[#c3b1e1]">Lo que dicen mis clientes</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -265,7 +240,7 @@
     </section>
   </main>
 
-  <footer class="flex flex-col items-center gap-6 px-5 py-10 text-center border-t border-primary/20">
+  <footer class="relative z-10 flex flex-col items-center gap-6 px-5 py-10 text-center border-t border-primary/20">
     <div class="flex flex-wrap justify-center gap-5">
       <a href="#" aria-label="Youtube" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors transition-transform hover:scale-110"><span class="material-symbols-outlined" style="font-size:28px;">smart_display</span></a>
       <a href="#" aria-label="Behance" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors transition-transform hover:scale-110"><span class="material-symbols-outlined" style="font-size:28px;">palette</span></a>
@@ -286,6 +261,7 @@
     const contactForm = document.querySelector('#contact form')
     const contactStatus = document.getElementById('contact-status')
     const contactSubmit = document.getElementById('contact-submit')
+    const bgBlobs = document.querySelectorAll('#page-bg .blob')
     if (contactForm) {
       contactForm.addEventListener('submit', async (e) => {
         e.preventDefault()
@@ -403,6 +379,16 @@
     }, { threshold: 0.2 })
     revealEls.forEach((el) => io.observe(el))
 
+    window.addEventListener('mousemove', (e) => {
+      const nx = (e.clientX / window.innerWidth) - 0.5
+      const ny = (e.clientY / window.innerHeight) - 0.5
+      bgBlobs.forEach((b) => {
+        const s = Number(b.dataset.strength || 8)
+        b.style.setProperty('--ox', `${nx * s * 10}px`)
+        b.style.setProperty('--oy', `${ny * s * 8}px`)
+      })
+    })
   </script>
+  <script src="assets/main.js"></script>
 </body>
 </html>

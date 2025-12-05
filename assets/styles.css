@@ -1,0 +1,36 @@
+html { scroll-behavior: smooth }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: translateY(0) } }
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; will-change: opacity, transform }
+.reveal.in-view { opacity: 1; transform: translateY(0) }
+.hover-glow:hover { box-shadow: 0 12px 36px rgba(140, 43, 238, .35) }
+@keyframes recordBlink { 0%, 60% { opacity: 1 } 30% { opacity: .45 } }
+.tilt-transition { transition: transform .12s ease; will-change: transform; transform-style: preserve-3d }
+.tilt-space { perspective: 900px }
+.record-led { animation: recordBlink 1.6s infinite }
+.aperture { opacity: 0; pointer-events: none }
+.aperture.active { animation: apertureBurst .18s ease-in-out }
+@keyframes apertureBurst { 0% { opacity: 0; transform: scale(.95) } 40% { opacity: .9; transform: scale(1) } 100% { opacity: 0; transform: scale(1.05) } }
+.aperture .blade { position: absolute; left: 50%; top: 50%; width: 60%; height: 8px; background: #1a1524; border-radius: 9999px; transform-origin: center; }
+.shutter-btn { background: linear-gradient(180deg, #d9d9d9 0%, #a6a6a6 60%, #7c7c7c 100%); box-shadow: inset 0 2px 6px rgba(255,255,255,.35), inset 0 -2px 8px rgba(0,0,0,.35), 0 6px 18px rgba(0,0,0,.35); }
+.shutter-btn:hover { transform: scale(1.06) }
+.camera-badge { position: relative; padding: 3px 12px; border-radius: 9999px; border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.92); background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.35)); box-shadow: inset 0 2px 4px rgba(255,255,255,.35), inset 0 -2px 6px rgba(0,0,0,.45), 0 6px 18px rgba(0,0,0,.4); font-size: 12px; letter-spacing: .35em; font-weight: 700; text-shadow: 0 1px 0 rgba(0,0,0,.35) }
+.camera-badge::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; box-shadow: 0 0 0 1px rgba(255,255,255,.12), inset 0 0 10px rgba(255,255,255,.06) }
+.camera-badge::after { content: ""; position: absolute; left: 8px; right: 8px; top: 2px; height: 12px; border-radius: 9999px; background: linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0)); opacity: .35; pointer-events: none }
+.camera-body { background: linear-gradient(180deg, #1a1524 0%, #0f0b17 100%); box-shadow: inset 0 8px 18px rgba(255,255,255,.04), inset 0 -8px 22px rgba(0,0,0,.35), 0 40px 90px rgba(10, 6, 20, .6) }
+.stage-vignette { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse at center, rgba(255,255,255,.06) 0%, rgba(0,0,0,.65) 60%, rgba(0,0,0,.88) 100%) }
+.lens-gloss { position:absolute; left:50%; top:50%; width:64px; height:36px; border-radius:9999px; background: rgba(255,255,255,.22); filter: blur(3px); opacity:.75; transform: translate(-50%, -50%) rotate(12deg) }
+@keyframes gradientShift { 0% { background-position: 0% 50% } 100% { background-position: 100% 50% } }
+.page-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(120deg, #FCFAFF, #E6E0F8, #FCFAFF); background-size: 200% 200%; animation: gradientShift 18s ease-in-out infinite alternate }
+.bg-grid { position:absolute; inset:0; background-image: 
+  repeating-linear-gradient(0deg, rgba(127, 90, 200, .06) 0, rgba(127, 90, 200, .06) 1px, transparent 1px, transparent 40px),
+  repeating-linear-gradient(90deg, rgba(127, 90, 200, .06) 0, rgba(127, 90, 200, .06) 1px, transparent 1px, transparent 40px); opacity:.35 }
+.blob { position:absolute; width: 520px; height: 520px; border-radius: 50%; filter: blur(60px); opacity:.22; transform: translate3d(var(--ox,0px), var(--oy,0px), 0); will-change: transform }
+.blob-1 { left:-160px; top:-100px; background: radial-gradient(circle at 30% 30%, rgba(158,98,255,.35), rgba(255,255,255,0) 60%)}
+.blob-2 { right:-140px; top:160px; background: radial-gradient(circle at 70% 40%, rgba(140,43,238,.30), rgba(255,255,255,0) 60%)}
+.blob-3 { left:24%; bottom:-180px; background: radial-gradient(circle at 50% 50%, rgba(115,76,154,.28), rgba(255,255,255,0) 60%)}
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
+.reviews-stars .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
+.text-gradient { color: #6f2bdc }
+@supports (-webkit-background-clip:text) or (background-clip:text) {
+  .text-gradient { background-image: linear-gradient(90deg, #6f2bdc, #9e62ff, #6f2bdc); -webkit-background-clip: text; background-clip: text; color: transparent }
+}
