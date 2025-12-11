@@ -326,4 +326,38 @@ if (bubble && bubbleHandle && bubbleToggle && bubblePanel) {
     if (next && next.scrollIntoView) next.scrollIntoView({ behavior: 'smooth' })
   })
 })()
+;(function initHeroEasterEgg(){
+  const portrait = document.getElementById('hero-portrait')
+  const eggAudio = document.getElementById('easteregg-audio')
+  if (!portrait || !eggAudio) return
+  portrait.addEventListener('click', () => {
+    eggAudio.currentTime = 0
+    eggAudio.play().catch(() => {})
+  })
+})()
+;(function initAboutParallax(){
+  const els = document.querySelectorAll('#about-me [data-parallax]')
+  if (!els.length) return
+  let ticking = false
+  function update(){
+    const center = window.innerHeight / 2
+    els.forEach((el)=>{
+      const r = el.getBoundingClientRect()
+      const mid = r.top + r.height / 2
+      const amp = Number(el.dataset.parallax || 6)
+      const t = Math.max(-1, Math.min(1, (mid - center) / window.innerHeight))
+      el.style.transform = `translateY(${t * amp}px)`
+    })
+    ticking = false
+  }
+  function onScroll(){
+    if (!ticking) {
+      ticking = true
+      requestAnimationFrame(update)
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', update)
+  update()
+})()
 

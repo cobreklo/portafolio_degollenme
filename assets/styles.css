@@ -56,6 +56,15 @@ html.dark {
 @supports (-webkit-background-clip:text) or (background-clip:text) {
   .text-gradient { background-image: linear-gradient(90deg, #6f2bdc, #9e62ff, #6f2bdc); -webkit-background-clip: text; background-clip: text; color: transparent }
 }
+.text-gradient-animate { color: #6f2bdc }
+html.dark .text-gradient-animate { color: #c3b1e1 }
+@supports (-webkit-background-clip:text) or (background-clip:text) {
+  .text-gradient-animate { background-image: linear-gradient(90deg, #6f2bdc, #9e62ff, #6f2bdc); -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 200% 200%; animation: gradientShift 12s linear infinite }
+}
+@keyframes breatheSoft { 0% { transform: translateY(0) scale(1) } 50% { transform: translateY(-2px) scale(1.01) } 100% { transform: translateY(0) scale(1) } }
+.breathe-soft { animation: breatheSoft 6s ease-in-out infinite; will-change: transform }
+@keyframes glowPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(140,43,238,.0) } 50% { box-shadow: 0 0 18px 4px rgba(140,43,238,.35) } }
+.glow-pulse { animation: glowPulse 3.6s ease-in-out infinite; border-radius: 9999px }
 
 #bubble-handle { user-select: none; -webkit-user-select: none; touch-action: none }
 #preloader { touch-action: none }
