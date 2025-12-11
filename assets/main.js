@@ -85,6 +85,7 @@ preloader.addEventListener('pointermove', tiltCamera)
 preloader.addEventListener('pointerleave', () => { if (cameraUi) cameraUi.style.transform = 'rotateY(0deg) rotateX(0deg)' })
 
 preloader.addEventListener('click', () => {
+  initBlurText()
   if (aperture) {
     aperture.classList.remove('active')
     void aperture.offsetWidth
@@ -126,7 +127,7 @@ const io = new IntersectionObserver((entries) => {
 revealEls.forEach((el) => io.observe(el))
 
 // BlurText inspirado en el prompt (sin dependencias)
-;(function initBlurText(){
+function initBlurText(){
   const els = document.querySelectorAll('.blur-text')
   els.forEach((el)=>{
     const text = (el.textContent || '').trim()
@@ -160,7 +161,7 @@ revealEls.forEach((el) => io.observe(el))
     }, { threshold: 0.1 })
     obs.observe(el)
   })
-})()
+}
 
 window.addEventListener('mousemove', (e) => {
   const nx = (e.clientX / window.innerWidth) - 0.5
