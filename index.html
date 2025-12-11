@@ -28,11 +28,12 @@
       },
     }
   </script>
+
   <link rel="stylesheet" href="assets/styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='20' font-size='20'>🎥</text></svg>">
   <meta name="theme-color" content="#8c2bee" />
 </head>
-<body class="font-body bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200 overflow-hidden">
+
+<body class="font-body bg-transparent dark:bg-transparent text-gray-800 dark:text-gray-200 overflow-hidden">
   <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0b0911] bg-gradient-to-b from-[#0b0911] to-[#07060c] overflow-hidden cursor-pointer">
     <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
       <div class="relative h-[90vh] w-[90vw] max-h-[800px] max-w-[1200px]">
@@ -81,8 +82,7 @@
 
   <div id="flash" class="fixed inset-0 z-[60] bg-white opacity-0 pointer-events-none transition-opacity duration-200"></div>
   <audio id="shutter-audio" preload="auto" src="assets/efectocamara.mp3"></audio>
-
-  <div id="page-bg" class="page-bg">
+  <div id="bg-layer">
     <div class="bg-grid"></div>
     <div class="blob blob-1" data-strength="8"></div>
     <div class="blob blob-2" data-strength="12"></div>
@@ -108,7 +108,7 @@
   </div>
 
   <main class="relative z-10">
-    <section id="about" class="w-full bg-background-light dark:bg-background-dark py-20 sm:py-24 relative min-h-[80vh] sm:min-h-screen">
+    <section id="about" class="w-full bg-transparent dark:bg-transparent py-20 sm:py-24 relative min-h-[80vh] sm:min-h-screen">
       <div class="container mx-auto max-w-6xl px-4">
         <div class="relative text-center">
           <div class="font-title blur-text text-[64px] sm:text-[96px] md:text-[140px] lg:text-[180px] leading-[0.8] tracking-tight uppercase text-[#6f2bdc] dark:text-[#c3b1e1]" data-animate-by="letters" data-delay="80" data-direction="top">HUGO</div>
@@ -129,7 +129,7 @@
       </div>
     </section>
 
-    <section id="photos" class="w-full py-20 sm:py-24 bg-gradient-to-b from-[#FCFAFF] to-[#E6E0F8] dark:from-[#191022] dark:to-[#2c2044]">
+    <section id="photos" class="w-full py-20 sm:py-24 bg-transparent dark:bg-transparent">
       <div class="container mx-auto max-w-6xl px-4">
         <div class="text-center mb-10">
           <h2 class="font-title text-4xl font-bold tracking-tight text-[#6f2bdc] dark:text-[#c3b1e1] sm:text-5xl">Mis Fotos</h2>
@@ -188,7 +188,7 @@
       </div>
     </section>
 
-    <section id="contact" class="w-full bg-background-light dark:bg-background-dark py-20 sm:py-24">
+    <section id="contact" class="w-full bg-transparent dark:bg-transparent py-20 sm:py-24">
       <div class="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col items-center text-center mb-12 reveal" data-delay="0ms">
           <h2 class="font-title text-3xl font-bold tracking-tight text-[#6f2bdc] dark:text-[#c3b1e1] sm:text-4xl">Hablemos</h2>
@@ -230,7 +230,7 @@
       </div>
     </section>
 
-    <section id="reviews" class="w-full py-20 sm:py-24 bg-background-light dark:bg-background-dark">
+    <section id="reviews" class="w-full py-20 sm:py-24 bg-transparent dark:bg-transparent">
       <div class="container mx-auto max-w-6xl px-4">
         <div class="text-center mb-10">
           <h2 class="font-title text-4xl font-bold tracking-tight text-[#6f2bdc] dark:text-[#c3b1e1] sm:text-5xl">Reseñas</h2>
@@ -274,5 +274,13 @@
   </footer>
 
   <script src="assets/main.js"></script>
+  <script>
+  const testImg = new Image();
+  testImg.src = 'img/mikudayo.jpeg';
+  testImg.onload = () => console.log('✅ img local cargada: img/mikudayo.jpeg');
+  testImg.onerror = () => console.error('❌ no se carga img/mikudayo.jpeg — revisa ruta/nombre/extensión');
+  </script>
+
+
 </body>
 </html>

@@ -8,7 +8,7 @@ const lensGloss = document.getElementById('lens-gloss')
 const contactForm = document.querySelector('#contact form')
 const contactStatus = document.getElementById('contact-status')
 const contactSubmit = document.getElementById('contact-submit')
-const bgBlobs = document.querySelectorAll('#page-bg .blob')
+const bgBlobs = document.querySelectorAll('#bg-layer .blob')
 
 if (contactForm) {
   contactForm.addEventListener('submit', async (e) => {
@@ -97,7 +97,7 @@ preloader.addEventListener('click', () => {
     flash.classList.remove('opacity-100')
     preloader.classList.add('opacity-0', 'transition-opacity')
     setTimeout(() => {
-      preloader.classList.add('hidden')
+      preloader.style.display = "none";
       document.body.classList.remove('overflow-hidden')
       const el = document.getElementById('about')
       if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth' })
@@ -334,3 +334,4 @@ if (bubble && bubbleHandle && bubbleToggle && bubblePanel) {
     if (next && next.scrollIntoView) next.scrollIntoView({ behavior: 'smooth' })
   })
 })()
+

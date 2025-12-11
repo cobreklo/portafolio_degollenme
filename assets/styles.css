@@ -1,11 +1,26 @@
-html { scroll-behavior: smooth }
+html {
+  scroll-behavior: smooth;
+}
+:root {
+  --bg-gradient: linear-gradient(120deg, rgba(255,255,255,0.18), rgba(230,224,248,0.18), rgba(255,255,255,0.18));
+}
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: translateY(0) } }
-.reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; will-change: opacity, transform }
-.reveal.in-view { opacity: 1; transform: translateY(0) }
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .6s ease, transform .6s ease;
+  will-change: opacity, transform;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
 .hover-glow:hover { box-shadow: 0 12px 36px rgba(140, 43, 238, .35) }
 @keyframes recordBlink { 0%, 60% { opacity: 1 } 30% { opacity: .45 } }
 .tilt-transition { transition: transform .12s ease; will-change: transform; transform-style: preserve-3d }
-.tilt-space { perspective: 900px }
+.tilt-space {
+  perspective: 900px;
+}
 .record-led { animation: recordBlink 1.6s infinite }
 .aperture { opacity: 0; pointer-events: none }
 .aperture.active { animation: apertureBurst .18s ease-in-out }
@@ -20,16 +35,54 @@ html { scroll-behavior: smooth }
 .stage-vignette { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse at center, rgba(255,255,255,.06) 0%, rgba(0,0,0,.65) 60%, rgba(0,0,0,.88) 100%) }
 .lens-gloss { position:absolute; left:50%; top:50%; width:64px; height:36px; border-radius:9999px; background: rgba(255,255,255,.22); filter: blur(3px); opacity:.75; transform: translate(-50%, -50%) rotate(12deg) }
 @keyframes gradientShift { 0% { background-position: 0% 50% } 100% { background-position: 100% 50% } }
-.page-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(120deg, #FCFAFF, #E6E0F8, #FCFAFF); background-size: 200% 200%; animation: gradientShift 18s ease-in-out infinite alternate }
-.bg-grid { position:absolute; inset:0; background-image: 
-  repeating-linear-gradient(0deg, rgba(127, 90, 200, .06) 0, rgba(127, 90, 200, .06) 1px, transparent 1px, transparent 40px),
-  repeating-linear-gradient(90deg, rgba(127, 90, 200, .06) 0, rgba(127, 90, 200, .06) 1px, transparent 1px, transparent 40px); opacity:.35 }
-.blob { position:absolute; width: 520px; height: 520px; border-radius: 50%; filter: blur(60px); opacity:.22; transform: translate3d(var(--ox,0px), var(--oy,0px), 0); will-change: transform }
-.blob-1 { left:-160px; top:-100px; background: radial-gradient(circle at 30% 30%, rgba(158,98,255,.35), rgba(255,255,255,0) 60%)}
-.blob-2 { right:-140px; top:160px; background: radial-gradient(circle at 70% 40%, rgba(140,43,238,.30), rgba(255,255,255,0) 60%)}
-.blob-3 { left:24%; bottom:-180px; background: radial-gradient(circle at 50% 50%, rgba(115,76,154,.28), rgba(255,255,255,0) 60%)}
-.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
-.reviews-stars .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
+/* PRUEBA RÁPIDA: fondo de test público */
+.page-bg, .page-bg::before, .page-bg::after { all: unset !important }
+
+.page-bg { position: fixed !important; inset: 0 !important; z-index: 0 !important; background-image: url('../img/mikudayo.jpeg') !important; background-repeat: repeat !important; background-size: 300px !important; pointer-events: none !important }
+/* .page-bg::after eliminado por solicitud */
+
+/* Grid: sin overlay (lo lavaba) */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: soft-light;
+  opacity: .22;
+}
+
+/* Blobs: sin overlay (lo blanqueaba), ahora soft-light */
+.blob {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: .18;
+  mix-blend-mode: soft-light;
+  transform: translate3d(var(--ox,0px), var(--oy,0px), 0);
+  will-change: transform;
+}
+
+.blob-1 {
+  left: -160px;
+  top: -100px;
+  background: radial-gradient(circle at 30% 30%, rgba(158,98,255,.35), rgba(255,255,255,0) 60%);
+}
+.blob-2 {
+  right: -140px;
+  top: 160px;
+  background: radial-gradient(circle at 70% 40%, rgba(140,43,238,.30), rgba(255,255,255,0) 60%);
+}
+.blob-3 {
+  left: 24%;
+  bottom: -180px;
+  background: radial-gradient(circle at 50% 50%, rgba(115,76,154,.28), rgba(255,255,255,0) 60%);
+}
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.reviews-stars .material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
 .text-gradient { color: #6f2bdc }
 @supports (-webkit-background-clip:text) or (background-clip:text) {
   .text-gradient { background-image: linear-gradient(90deg, #6f2bdc, #9e62ff, #6f2bdc); -webkit-background-clip: text; background-clip: text; color: transparent }
@@ -38,3 +91,46 @@ html { scroll-behavior: smooth }
 #bubble-handle { user-select: none; -webkit-user-select: none; touch-action: none }
 #preloader { touch-action: none }
 #bubble-menu { -webkit-tap-highlight-color: transparent }
+body {
+  background-color: rgba(247, 246, 248, 0.0) !important;  /* modo claro */
+  background-image: url("../img/mikudayo.png");
+  background-size: 320px;
+  background-repeat: repeat;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.dark body {
+  background-color: rgba(25, 16, 34, 0.0) !important;    /* modo oscuro */
+  background-image: url("../img/mikudayo_dark.png");
+}
+#page-bg {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  background-repeat: repeat !important;
+  background-size: 300px !important;
+  pointer-events: none !important;
+  mix-blend-mode: normal !important; /* puedes cambiar después */
+}
+
+#page-bg * {
+  pointer-events: none !important;
+}
+#bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;       /* DETRÁS DE TODO */
+}
+
+#preloader {
+  overflow: hidden;
+}
+#preloader.hidden {
+  display: none !important;
+}
+ 
+
