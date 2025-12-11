@@ -8,7 +8,7 @@ const lensGloss = document.getElementById('lens-gloss')
 const contactForm = document.querySelector('#contact form')
 const contactStatus = document.getElementById('contact-status')
 const contactSubmit = document.getElementById('contact-submit')
-const bgBlobs = document.querySelectorAll('#bg-layer .blob')
+ 
 
 if (contactForm) {
   contactForm.addEventListener('submit', async (e) => {
@@ -163,15 +163,7 @@ function initBlurText(){
   })
 }
 
-window.addEventListener('mousemove', (e) => {
-  const nx = (e.clientX / window.innerWidth) - 0.5
-  const ny = (e.clientY / window.innerHeight) - 0.5
-  bgBlobs.forEach((b) => {
-    const s = Number(b.dataset.strength || 8)
-    b.style.setProperty('--ox', `${nx * s * 10}px`)
-    b.style.setProperty('--oy', `${ny * s * 8}px`)
-  })
-})
+ 
 
 const bubble = document.getElementById('bubble-menu')
 const bubbleHandle = document.getElementById('bubble-handle')
